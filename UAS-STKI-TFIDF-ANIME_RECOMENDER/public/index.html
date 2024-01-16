@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anime Recommendation</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto p-8">
+        <h1 class="text-4xl font-bold text-center text-gray-700 mb-6">Anime Recommendation System</h1>
+        <div class="flex justify-center">
+            <div class="w-full max-w-sm">
+                <div class="md:flex md:items-center mb-6">
+                    <input class="bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg py-2 px-4 block w-full appearance-none leading-normal" 
+                           type="text" id="animeName" name="anime_name" required placeholder="Enter Anime Name">
+                </div>
+                <div class="md:flex md:items-center">
+                    <button class="shadow bg-purple-500 hover:bg-purple-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded" 
+                            id="submitBtn">
+                        Get Recommendations
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="recommendation-table"  class="mt-6">
+            <!-- Recommendations will load here -->
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('submitBtn').addEventListener('click', function(event) {
+            event.preventDefault();
+            var animeName = document.getElementById('animeName').value;
+            if (animeName) {
+                fetch('http://127.0.0.1:8000/recommend-html/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `anime_name=${encodeURIComponent(animeName)}`
+                })
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('recommendation-table').innerHTML = data;
+                    document.getElementById('animeName').value = ''; // Clear the input field after the response
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+            }
+        });
+    </script>
+    
+
+</body>
+</html>
